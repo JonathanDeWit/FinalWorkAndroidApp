@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import androidx.activity.viewModels
+import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,13 +15,9 @@ import androidx.navigation.fragment.findNavController
 import be.ehb.finalworkjonathandewit.Model.LoginUser
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.LoginViewModels
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -32,24 +29,39 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
 
 
-        var button = view.findViewById<Button>(R.id.loginButton)
+        var loginButton = view.findViewById<Button>(R.id.loginButton)
+        var errorTextView = view.findViewById<TextView>(R.id.errorTextView)
+
+        var userNameInput = view.findViewById<EditText>(R.id.editTextTextUserName)
+        var passwordInput = view.findViewById<EditText>(R.id.editTextTextPassword)
 
 
-        button.setOnClickListener {
-            button.isEnabled = false
-
+        loginButton.setOnClickListener {
+            loginButton.isEnabled = false
+            errorTextView.text=""
             lifecycleScope.launch {
                 var jwtToken = ""
+                //var loginUser = LoginUser("jonathan.de.wit@gmail.be", "Jonathan!014741212")
+                var loginUser = LoginUser(userNameInput.text.toString(), passwordInput.text.toString())
                 withContext(Dispatchers.IO) {
-                    jwtToken = loginViewModel.login(LoginUser("jonathan.de.wit@gmail.com", "Jonathan!014741212"), applicationViewModels.getQueue(activity))
+                    jwtToken = loginViewModel.login(loginUser, applicationViewModels.getQueue(activity))
                 }
                 withContext(Dispatchers.Main) {
-                    if (jwtToken.isNotEmpty()){
+                    if (jwtToken.length>3){
                         Log.e("API_Request_Login", "After request")
                         endLogin()
                     }
                     else{
-                        button.isEnabled = true
+                        if (jwtToken.equals("400")){
+                            errorTextView.text = getString(R.string.userAndPasswordNotMatch)
+                        }else if(jwtToken.equals("408")){
+                            errorTextView.text = getString(R.string.manyWrongAttemps)
+                        }else{
+                            errorTextView.text = getString(R.string.loginError)
+                        }
+                        userNameInput.text.clear()
+                        passwordInput.text.clear()
+                        loginButton.isEnabled = true
                     }
                 }
             }

@@ -2,4 +2,9 @@
     <string name="app_name">FinalWorkJonathanDeWit</string>
     <string name="enter_username">Enter username</string>
     <string name="enter_password">Enter password</string>
+    <string name="login">Login</string>
+    <string name="loginButton">Continue</string>
+    <string name="manyWrongAttemps">Too many wrong attempts please try again later</string>
+    <string name="userAndPasswordNotMatch">Incorrect username or password</string>
+    <string name="loginError">An error has occurred. Please try again</string>
 </resources>

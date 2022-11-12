@@ -37,8 +37,23 @@ class LoginViewModels : ViewModel()  {
                 val token = Gson().fromJson(response.toString(), JwtToken::class.java)
                 jwtToken.resume(token.jwtToken)
             }, { error ->
-                Log.e("API_Request_Login", error.localizedMessage)
-                jwtToken.resume("")
+                Log.e("API_Request_Login", error.message.toString())
+                if(error.networkResponse != null){
+                    if (error.networkResponse.statusCode == 408){
+                        Log.e("API_Request_Login", "408")
+                        jwtToken.resume("408")
+                    }
+                    else if (error.networkResponse.statusCode == 400){
+                        Log.e("API_Request_Login", "400")
+                        jwtToken.resume("400")
+                    }
+                    else{
+                        Log.e("API_Request_Login", "000")
+                        jwtToken.resume("000")
+                    }
+                }else{
+                    jwtToken.resume("000")
+                }
             })
 
         loginRequest.tag = LOGIN_REQUEST_TAG
