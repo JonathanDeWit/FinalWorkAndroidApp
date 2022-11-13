@@ -2,19 +2,12 @@ package be.ehb.finalworkjonathandewit.ViewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.findNavController
-import be.ehb.finalworkjonathandewit.Activitys.MainActivity
-import be.ehb.finalworkjonathandewit.Fragments.LoginFragmentDirections
-import be.ehb.finalworkjonathandewit.Model.JwtToken
-import be.ehb.finalworkjonathandewit.Model.LoginUser
+import be.ehb.finalworkjonathandewit.Models.JwtToken
+import be.ehb.finalworkjonathandewit.Models.LoginUser
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.RequestFuture
-import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import org.json.JSONObject
 import kotlin.coroutines.suspendCoroutine
 import kotlin.coroutines.resume

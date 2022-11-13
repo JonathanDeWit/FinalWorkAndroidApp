@@ -13,7 +13,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import be.ehb.finalworkjonathandewit.R
+import be.ehb.finalworkjonathandewit.SecurityApplication
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
+import be.ehb.finalworkjonathandewit.ViewModels.RoomViewModels
+import be.ehb.finalworkjonathandewit.ViewModels.UserViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -22,10 +25,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNavBar: BottomNavigationView
+    private val roomViewModel: RoomViewModels by viewModels {
+        UserViewModelFactory((application as SecurityApplication).repository)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        roomViewModel.allUsers
 
         val applicationViewModels: ApplicationViewModels by viewModels()
 

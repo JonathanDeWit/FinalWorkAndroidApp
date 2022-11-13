@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import be.ehb.finalworkjonathandewit.Activitys.MainActivity
 import be.ehb.finalworkjonathandewit.R
 import androidx.navigation.fragment.findNavController
-import be.ehb.finalworkjonathandewit.Model.LoginUser
+import be.ehb.finalworkjonathandewit.Models.LoginUser
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.LoginViewModels
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +23,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val applicationViewModels: ApplicationViewModels by activityViewModels()
         val loginViewModel: LoginViewModels by activityViewModels()
 
