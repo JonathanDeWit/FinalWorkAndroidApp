@@ -14,4 +14,10 @@ class UserRepository(private val wordDao: UserDao) {
     suspend fun insert(user:User) {
         wordDao.insert(user)
     }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun delete(user:User) {
+        wordDao.delete(user)
+    }
 }

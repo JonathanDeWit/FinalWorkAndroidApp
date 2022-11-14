@@ -1,5 +1,6 @@
 package be.ehb.finalworkjonathandewit.Fragments
 
+import android.app.DownloadManager.Request
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,21 +13,30 @@ import androidx.lifecycle.lifecycleScope
 import be.ehb.finalworkjonathandewit.Activitys.MainActivity
 import be.ehb.finalworkjonathandewit.R
 import androidx.navigation.fragment.findNavController
+import be.ehb.finalworkjonathandewit.Models.ApiUserRequest
 import be.ehb.finalworkjonathandewit.Models.LoginUser
+import be.ehb.finalworkjonathandewit.Models.RequestError
+import be.ehb.finalworkjonathandewit.Models.User
+import be.ehb.finalworkjonathandewit.SecurityApplication
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.LoginViewModels
+import be.ehb.finalworkjonathandewit.ViewModels.UserViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
+
+    private val applicationViewModels: ApplicationViewModels by activityViewModels {
+        UserViewModelFactory((activity?.application as SecurityApplication).repository, requireActivity())
+    }
+    private val loginViewModel: LoginViewModels by activityViewModels()
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val applicationViewModels: ApplicationViewModels by activityViewModels()
-        val loginViewModel: LoginViewModels by activityViewModels()
-
 
 
 
@@ -41,25 +51,30 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             loginButton.isEnabled = false
             errorTextView.text=""
             lifecycleScope.launch {
+                var error = RequestError()
                 var jwtToken = ""
-                //var loginUser = LoginUser("jonathan.de.wit@gmail.be", "Jonathan!014741212")
-                var loginUser = LoginUser(userNameInput.text.toString(), passwordInput.text.toString())
+                var user:User = User()
+                var loginUser = LoginUser("jonathan.de.wit@gmail.be", "Jonathan014741")
+                //var loginUser = LoginUser(userNameInput.text.toString(), passwordInput.text.toString())
                 withContext(Dispatchers.IO) {
-                    jwtToken = loginViewModel.login(loginUser, applicationViewModels.getQueue(activity))
+                    jwtToken = ApiUserRequest.login(loginUser, applicationViewModels.queue, error)
+                }
+                if (error.errorCode<=0){
+                    withContext(Dispatchers.IO) {
+                        user = ApiUserRequest.getUserInformation(jwtToken, applicationViewModels.queue, error)
+                    }
+                }
+                if (error.errorCode<=0 && applicationViewModels.dbUsers < 1){
+                    withContext(Dispatchers.IO) {
+                        applicationViewModels.insert(user)
+                    }
                 }
                 withContext(Dispatchers.Main) {
-                    if (jwtToken.length>3){
-                        Log.e("API_Request_Login", "After request")
+                    if (error.errorCode<=0){
                         endLogin()
                     }
                     else{
-                        if (jwtToken.equals("400")){
-                            errorTextView.text = getString(R.string.userAndPasswordNotMatch)
-                        }else if(jwtToken.equals("408")){
-                            errorTextView.text = getString(R.string.manyWrongAttemps)
-                        }else{
-                            errorTextView.text = getString(R.string.loginError)
-                        }
+                        showError(error, errorTextView)
                         userNameInput.text.clear()
                         passwordInput.text.clear()
                         loginButton.isEnabled = true
@@ -67,13 +82,24 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
             }
         }
-
-
     }
 
     private fun endLogin(){
         (activity as MainActivity?)?.enableNavBar()
+
         val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
         findNavController().navigate(action)
+    }
+
+    private fun showError(error:RequestError, errorTextView:TextView){
+        if (error.errorCode == 400){
+            errorTextView.text = getString(R.string.userAndPasswordNotMatch)
+        }else if(error.errorCode == 408){
+            errorTextView.text = getString(R.string.manyWrongAttemps)
+        }else if(error.errorCode == 401){
+            errorTextView.text = getString(R.string.UnauthorizedError)
+        }else{
+            errorTextView.text = getString(R.string.loginError)
+        }
     }
 }

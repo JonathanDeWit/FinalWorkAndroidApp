@@ -1,13 +1,12 @@
 package be.ehb.finalworkjonathandewit.Databases
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import be.ehb.finalworkjonathandewit.Daos.UserDao
 import be.ehb.finalworkjonathandewit.Models.User
 
 @Database(entities = [User::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
 
 
@@ -30,6 +29,7 @@ abstract class AppDatabase: RoomDatabase() {
                     "securemy_database"
                 )
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     .build()
                 INSTANCE = instance
                 // return instance

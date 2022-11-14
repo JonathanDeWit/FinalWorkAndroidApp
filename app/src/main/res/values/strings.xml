@@ -7,4 +7,10 @@
     <string name="manyWrongAttemps">Too many wrong attempts please try again later</string>
     <string name="userAndPasswordNotMatch">Incorrect username or password</string>
     <string name="loginError">An error has occurred. Please try again</string>
+    <string name="UnauthorizedError">Unauthorized Access</string>
+    <string name="first_name">First name:</string>
+    <string name="last_name">Last name:</string>
+    <string name="email">Email:</string>
+    <string name="delete_my_account">Delete my account</string>
+    <string name="profile">Profile</string>
 </resources>

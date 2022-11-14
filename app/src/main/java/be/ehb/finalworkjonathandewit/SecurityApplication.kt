@@ -6,6 +6,6 @@ import be.ehb.finalworkjonathandewit.Repositorys.UserRepository
 
 class SecurityApplication : Application() {
 
-    val database by lazy { AppDatabase.getDatabase(this) }
+    val database by lazy { AppDatabase.getDatabase(this)}
     val repository by lazy { UserRepository(database.userDao()) }
 }
