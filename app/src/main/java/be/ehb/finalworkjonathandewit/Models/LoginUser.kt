@@ -1,5 +1,5 @@
 package be.ehb.finalworkjonathandewit.Models
 
-class LoginUser (val email:String, val password:String){
+class LoginUser (val email:String, var password:String){
 
 }

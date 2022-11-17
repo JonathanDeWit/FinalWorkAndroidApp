@@ -1,6 +1,5 @@
 package be.ehb.finalworkjonathandewit.Fragments
 
-import android.app.DownloadManager.Request
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,9 +20,13 @@ import be.ehb.finalworkjonathandewit.SecurityApplication
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.LoginViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.UserViewModelFactory
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -44,7 +47,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         var errorTextView = view.findViewById<TextView>(R.id.errorTextView)
 
         var userNameInput = view.findViewById<EditText>(R.id.editTextTextUserName)
-        var passwordInput = view.findViewById<EditText>(R.id.editTextTextPassword)
+        var passwordInput = view.findViewById<EditText>(R.id.enterPasswordEditText)
+
+
 
 
         loginButton.setOnClickListener {
@@ -56,12 +61,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 var user:User = User()
                 var loginUser = LoginUser("jonathan.de.wit@gmail.be", "Jonathan014741")
                 //var loginUser = LoginUser(userNameInput.text.toString(), passwordInput.text.toString())
+
                 withContext(Dispatchers.IO) {
                     jwtToken = ApiUserRequest.login(loginUser, applicationViewModels.queue, error)
                 }
                 if (error.errorCode<=0){
                     withContext(Dispatchers.IO) {
-                        user = ApiUserRequest.getUserInformation(jwtToken, applicationViewModels.queue, error)
+                        user = ApiUserRequest.getUserInformation(jwtToken, user.apiKeyDate, applicationViewModels.queue, error)
                     }
                 }
                 if (error.errorCode<=0 && applicationViewModels.dbUsers < 1){
@@ -69,8 +75,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         applicationViewModels.insert(user)
                     }
                 }
+                else{
+                    withContext(Dispatchers.IO) {
+                        applicationViewModels.update(user)
+                    }
+                }
                 withContext(Dispatchers.Main) {
                     if (error.errorCode<=0){
+
                         endLogin()
                     }
                     else{
@@ -102,4 +114,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             errorTextView.text = getString(R.string.loginError)
         }
     }
+
+
+
+
+
+
 }

@@ -13,4 +13,11 @@
     <string name="email">Email:</string>
     <string name="delete_my_account">Delete my account</string>
     <string name="profile">Profile</string>
+    <string name="please_enter_your_password">Please enter your password to validate your choice</string>
+    <string name="password">Password</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="cansel">Cansel</string>
+    <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your account?</string>
+    <string name="user_is_deleted">Account is successfully deleted</string>
+    <string name="error_user_is_deleted">Error during account delete</string>
 </resources>

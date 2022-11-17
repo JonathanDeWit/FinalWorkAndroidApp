@@ -13,11 +13,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import be.ehb.finalworkjonathandewit.Models.ApiUserRequest
+import be.ehb.finalworkjonathandewit.Models.User
 import be.ehb.finalworkjonathandewit.R
 import be.ehb.finalworkjonathandewit.SecurityApplication
 import be.ehb.finalworkjonathandewit.ViewModels.ApplicationViewModels
 import be.ehb.finalworkjonathandewit.ViewModels.UserViewModelFactory
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import org.json.JSONObject
+import java.util.*
+import kotlin.coroutines.resume
+
 class MainActivity : AppCompatActivity() {
 
 
@@ -38,24 +47,10 @@ class MainActivity : AppCompatActivity() {
             Log.e("Object:", users.size.toString())
             applicationViewModels.dbUsers = users.size
             for (user in users){
-                Log.e("Object:", user.UserName)
+                applicationViewModels.dbUser = user
+                Log.e("Object:", user.Id)
             }
         })
-
-//        Log.e("Object:", Thread.currentThread().name)
-//        lifecycleScope.launch(Dispatchers.IO){
-//            var list = applicationViewModels.allUsers
-//            Log.e("Object:", Thread.currentThread().name)
-//
-//
-//            if (applicationViewModels.allUsers != null){
-//                for (user in applicationViewModels.allUsers.value!!){
-//                    Log.e("Object:", user.UserName)
-//                }
-//            }
-//            //applicationViewModels.insert(User("Jonathan","", "", "", "", ""))
-//        }
-
 
         //https://www.youtube.com/watch?v=yLOsaR_nDrU&t=309s
         //Setup navigation en toolbar
@@ -71,14 +66,17 @@ class MainActivity : AppCompatActivity() {
         //Set up bottom navigation bar
         bottomNavBar = findViewById<BottomNavigationView>(R.id.bottomNavigationBar)
         bottomNavBar.setupWithNavController(navController)
-        bottomNavBar.visibility = View.GONE
+        disableNavBar()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    public fun enableNavBar(){
+    fun enableNavBar(){
         bottomNavBar.visibility = View.VISIBLE
+    }
+    fun disableNavBar(){
+        bottomNavBar.visibility = View.GONE
     }
 }
