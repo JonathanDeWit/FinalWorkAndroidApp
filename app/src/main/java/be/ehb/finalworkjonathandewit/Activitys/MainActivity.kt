@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,9 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.*
 import kotlin.coroutines.resume
@@ -43,14 +47,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        applicationViewModels.allUsers.observe(this, Observer { users ->
-            Log.e("Object:", users.size.toString())
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            var users = applicationViewModels.allUsersList()
             applicationViewModels.dbUsers = users.size
             for (user in users){
                 applicationViewModels.dbUser = user
-                Log.e("Object:", user.Id)
+                Log.e("Object-Main:", user.Id)
             }
-        })
+        }
 
         //https://www.youtube.com/watch?v=yLOsaR_nDrU&t=309s
         //Setup navigation en toolbar

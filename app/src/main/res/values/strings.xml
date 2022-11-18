@@ -9,7 +9,9 @@
     <string name="loginError">An error has occurred. Please try again</string>
     <string name="UnauthorizedError">Unauthorized Access</string>
     <string name="first_name">First name:</string>
+    <string name="first_name_regist">First name</string>
     <string name="last_name">Last name:</string>
+    <string name="last_name_regist">Last name</string>
     <string name="email">Email:</string>
     <string name="delete_my_account">Delete my account</string>
     <string name="profile">Profile</string>
@@ -20,4 +22,17 @@
     <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your account?</string>
     <string name="user_is_deleted">Account is successfully deleted</string>
     <string name="error_user_is_deleted">Error during account delete</string>
+    <string name="registration">Registration</string>
+    <string name="enter_your_first_name">Enter your first name</string>
+    <string name="enter_your_last_name">Enter your last name</string>
+    <string name="enter_your_email_adress">Enter your email adress</string>
+    <string name="email_adress">Email adress</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="confirm_your_password">Confirm your password</string>
+    <string name="confirm_npassword">Confirm\nPassword</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="no_empty_fields">No field can be empty</string>
+    <string name="same_password">Password and Confirm Password do not match</string>
+    <string name="logout_button_description">Button to log out</string>
+
 </resources>

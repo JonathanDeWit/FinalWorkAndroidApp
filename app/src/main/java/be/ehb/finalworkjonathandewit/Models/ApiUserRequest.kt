@@ -16,13 +16,13 @@ class ApiUserRequest {
         private val LOGIN_REQUEST_TAG = "LoginRequest"
         private val GET_USER_DATA_REQUEST_TAG = "GetUserDataRequest"
         private val DELETE_USER_TAG = "DeleteUserRequest"
+        private val REGIST_USER_TAG = "RegistUserRequest"
 
         suspend fun login(loginUser: LoginUser, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<String> { jwtToken ->
 
             val requestUrl = "$apiUrl/api/user/login"
 
             val loginJson = Gson().toJson(loginUser)
-            Log.e("Test",loginJson.toString().toByteArray().size.toString())
             Log.e(LOGIN_REQUEST_TAG, loginJson)
 
             val loginRequest = JsonObjectRequest(
@@ -44,15 +44,12 @@ class ApiUserRequest {
                 }
             )
 
-
-            Log.e("header", loginRequest.headers.toString())
-
             loginRequest.tag = LOGIN_REQUEST_TAG
             queue.add(loginRequest)
         }
 
         suspend fun getUserInformation(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<User> { apiUser ->
-            if (isTokenStilValide(apiKeyDate)){
+            if (User.isTokenStilValide(apiKeyDate)){
                 val requestUrl = "$apiUrl/api/user/getInfo"
 
                 val getUserDataRequest = object:JsonObjectRequest(
@@ -82,24 +79,41 @@ class ApiUserRequest {
                     }
                 }
 
-//                if(getUserDataRequest.headers is HashMap<String, String>){
-//                    getUserDataRequest.headers["Authorization"]="Bearer $apiKey"
-//                }
-
-                Log.e("request", getUserDataRequest.headers.toString())
-
-
                 getUserDataRequest.tag = LOGIN_REQUEST_TAG
                 queue.add(getUserDataRequest)
+            }else{
+                //ask new token
             }
         }
-        suspend fun registUser(queue: RequestQueue, errorRequest:RequestError, user: registUser) = suspendCoroutine<User> { apiUser ->
+        suspend fun registUser(queue: RequestQueue, errorRequest:RequestError, user: RegistUser) = suspendCoroutine<Boolean> { createStatus ->
+            val requestUrl = "$apiUrl/api/user/regist"
 
+            val loginJson = Gson().toJson(user)
+            Log.e(LOGIN_REQUEST_TAG, loginJson)
+
+            val loginRequest = JsonObjectRequest(
+                Request.Method.POST, requestUrl, JSONObject(loginJson),
+                { response ->
+                    Log.e(LOGIN_REQUEST_TAG, response.toString())
+                    createStatus.resume(true)
+                }, { error ->
+                    Log.e(LOGIN_REQUEST_TAG, error.message.toString())
+                    if(error.networkResponse != null){
+                        errorRequest.errorCode = error.networkResponse.statusCode
+                        createStatus.resume(false)
+                    }else{
+                        errorRequest.errorCode = 1
+                        createStatus.resume(false)
+                    }
+                }
+            )
+
+            loginRequest.tag = LOGIN_REQUEST_TAG
+            queue.add(loginRequest)
         }
 
         suspend fun deleteUser(queue: RequestQueue, errorRequest:RequestError, loginUser: LoginUser, apiKey: String, apiKeyDate:Date)= suspendCoroutine<Boolean>{ deleteStatus ->
-            loginUser.password = "Jonathan014741"
-            if (isTokenStilValide(apiKeyDate)){
+            if (User.isTokenStilValide(apiKeyDate)){
                 val requestUrl = "$apiUrl/api/user/delete"
 
                 val loginJson = Gson().toJson(loginUser)
@@ -136,92 +150,10 @@ class ApiUserRequest {
                 userDeleteRequest.tag = LOGIN_REQUEST_TAG
                 queue.add(userDeleteRequest)
             }
-        }
-
-
-//        suspend fun deleteA(queue: RequestQueue, errorRequest:RequestError)= suspendCoroutine<LoginUser>{ deleteStatus ->
-//            val requestUrl = "$apiUrl/api/user/deletea"
-//
-//            //val loginJson = Gson().toJson(loginUser)
-//            Log.e("DeleteA", "Start")
-//
-//            val userDeleteRequest = object:JsonObjectRequest(
-//                Request.Method.DELETE, requestUrl, null,
-//                { response ->
-//                    Log.e("DeleteA", response.toString())
-//                    val user = Gson().fromJson(response.toString(), LoginUser::class.java)
-//                    deleteStatus.resume(user)
-//                }, { error ->
-//                    Log.e(DELETE_USER_TAG, error.message.toString())
-//                    if(error.networkResponse != null){
-//                        errorRequest.errorCode = error.networkResponse.statusCode
-//                        deleteStatus.resume(LoginUser("", ""))
-//                    }else{
-//                        errorRequest.errorCode = 1
-//                        deleteStatus.resume(LoginUser("", ""))
-//                    }
-//                })
-//            {
-//            }
-//
-//            userDeleteRequest.tag = LOGIN_REQUEST_TAG
-//            queue.add(userDeleteRequest)
-//        }
-//
-//        suspend fun deleteB(queue: RequestQueue, errorRequest:RequestError, loginUser: LoginUser)= suspendCoroutine<LoginUser>{ deleteStatus ->
-//            val requestUrl = "$apiUrl/api/user/postb"
-//
-//            val loginJson = Gson().toJson(loginUser)
-//            Log.e("DeleteB", "Start")
-//
-//
-//            var test = "{\"Email\":\"jonathan.de.wit@gmail.be\",\"Password\":\"Jonathan014741\"}"
-//            Log.e("DeleteB", JSONObject(test).toString())
-//
-//            val userDeleteRequest = JsonObjectRequest(
-//                Request.Method.POST, requestUrl, JSONObject(test),
-//                { response ->
-//                    Log.e("DeleteB", response.toString())
-//                    val user = Gson().fromJson(response.toString(), LoginUser::class.java)
-//                    deleteStatus.resume(user)
-//                }, { error ->
-//                    Log.e(DELETE_USER_TAG, error.message.toString())
-//                    if(error.networkResponse != null){
-//                        errorRequest.errorCode = error.networkResponse.statusCode
-//                        deleteStatus.resume(LoginUser("", ""))
-//                    }else{
-//                        errorRequest.errorCode = 1
-//                        deleteStatus.resume(LoginUser("", ""))
-//                    }
-//                })
-//
-//            userDeleteRequest.tag = LOGIN_REQUEST_TAG
-//            queue.add(userDeleteRequest)
-//        }
-
-
-
-
-
-        fun isTokenStilValide(apiKeyDate:Date):Boolean{
-
-            val apikeyEndDate = Date(apiKeyDate.time+(14*60*1000))
-            val now = Date()
-
-            //inspired by https://www.techiedelight.com/compare-two-dates-in-kotlin/
-            val cmp = apikeyEndDate.compareTo(now)
-            when{
-                cmp > 0 -> {
-                    return true
-                }
-                cmp < 0 -> {
-                    return true
-                }
-                else ->{
-                    return false
-                }
+            else{
+                //ask new token
             }
-
         }
+
     }
 }

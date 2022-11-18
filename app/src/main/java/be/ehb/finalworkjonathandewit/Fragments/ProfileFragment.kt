@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import be.ehb.finalworkjonathandewit.Models.RequestError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -41,12 +43,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         var lastNameTextView = view.findViewById<TextView>(R.id.lastNameTextView)
         var emailTextView = view.findViewById<TextView>(R.id.emailTextView)
         var deleteButton = view.findViewById<Button>(R.id.deleteButton)
+        var logoutButton = view.findViewById<ImageButton>(R.id.logoutButton)
 
 
 
         activity?.let {
             applicationViewModels.allUsers.observe(it, Observer { users ->
-                applicationViewModels.dbUsers = users.size
                 for (user in users){
                     appUser = user
                     firstNameTextView.text = user.UserName
@@ -54,10 +56,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     lastNameTextView.text = getString(R.string.last_name).plus(" ").plus(user.LastName)
                     emailTextView.text = getString(R.string.email).plus(" ").plus(user.Email)
 
-                    Log.e("Object:", user.UserName)
+                    Log.e("Object-Profile:", user.UserName)
                 }
             })
         }
+        //applicationViewModels.allUsers.removeObservers(activity)
         Log.e("User", appUser.Id)
 
         deleteButton.setOnClickListener {
@@ -66,6 +69,25 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         }
 
+        logoutButton.setOnClickListener {
+            lifecycleScope.launch{
+                withContext(Dispatchers.IO){
+                    var users = applicationViewModels.allUsersList()
+                    applicationViewModels.dbUsers = users.size
+                    for (user in users){
+                        user.apiKey = ""
+                        user.apiKeyDate = Date(user.apiKeyDate.time-(360*24*60*60*1000))
+                        applicationViewModels.dbUser = user
+                    }
+                }
+                withContext(Dispatchers.IO){
+                    applicationViewModels.update(applicationViewModels.dbUser)
+                }
+                withContext(Dispatchers.Main){
+                    startLogin()
+                }
+            }
+        }
 
 
     }
@@ -102,6 +124,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     withContext(Dispatchers.Main) {
                         if (deleteStatus){
                             Toast.makeText(activity, getString(R.string.user_is_deleted), Toast.LENGTH_SHORT).show()
+                            applicationViewModels.dbUser = User()
                             startLogin()
                         }else{
                             Toast.makeText(activity, getString(R.string.error_user_is_deleted), Toast.LENGTH_SHORT).show()
@@ -121,6 +144,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         (activity as MainActivity?)?.disableNavBar()
         val action = ProfileFragmentDirections.actionProfileFragmentToLoginFragment()
         findNavController().navigate(action)
+    }
 
+
+    override fun onStop() {
+        super.onStop()
+        activity?.let { applicationViewModels.allUsers.removeObservers(it) }
     }
 }

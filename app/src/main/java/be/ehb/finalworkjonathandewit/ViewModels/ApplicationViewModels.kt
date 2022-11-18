@@ -12,9 +12,14 @@ class ApplicationViewModels(private val repository: UserRepository, context: Con
 
     val queue: RequestQueue = Volley.newRequestQueue(context)
     val allUsers: LiveData<List<User>> = repository.allUsers.asLiveData()
+
     var dbUser = User()
 
     var dbUsers = 0
+
+    suspend fun allUsersList(): List<User>{
+        return repository.getUserList()
+    }
 
     fun insert(user: User) = viewModelScope.launch {
         repository.insert(user)
@@ -30,6 +35,11 @@ class ApplicationViewModels(private val repository: UserRepository, context: Con
 
     fun update(user: User) = viewModelScope.launch {
         repository.update(user)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        queue?.stop()
     }
 }
 

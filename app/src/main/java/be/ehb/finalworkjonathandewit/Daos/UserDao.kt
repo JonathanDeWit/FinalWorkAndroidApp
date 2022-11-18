@@ -16,6 +16,9 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): Flow<List<User>>
 
+    @Query("SELECT * FROM user")
+    fun getAllList(): List<User>
+
     @Query("SELECT * FROM user WHERE Id LIKE :id")
     fun getUser(id: String): Flow<User>
 

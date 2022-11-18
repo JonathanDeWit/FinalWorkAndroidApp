@@ -17,9 +17,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
 
-
-        var button = view.findViewById<Button>(R.id.loginButton)
-
 //
 //        button.setOnClickListener {
 //            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()

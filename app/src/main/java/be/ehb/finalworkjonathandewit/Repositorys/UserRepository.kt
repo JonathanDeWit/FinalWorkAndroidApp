@@ -20,6 +20,13 @@ class UserRepository(private val wordDao: UserDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    suspend fun getUserList():List<User> {
+        return wordDao.getAllList()
+    }
+
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun insert(user:User) {
         wordDao.insert(user)
     }
