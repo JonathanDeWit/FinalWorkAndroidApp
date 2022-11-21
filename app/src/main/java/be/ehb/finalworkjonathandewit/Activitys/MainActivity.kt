@@ -48,14 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            var users = applicationViewModels.allUsersList()
-            applicationViewModels.dbUsers = users.size
-            for (user in users){
-                applicationViewModels.dbUser = user
-                Log.e("Object-Main:", user.Id)
-            }
-        }
+
 
         //https://www.youtube.com/watch?v=yLOsaR_nDrU&t=309s
         //Setup navigation en toolbar

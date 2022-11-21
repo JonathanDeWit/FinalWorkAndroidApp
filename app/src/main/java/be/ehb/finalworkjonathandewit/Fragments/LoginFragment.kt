@@ -59,26 +59,30 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         var userNameInput = view.findViewById<EditText>(R.id.editTextTextUserName)
         var passwordInput = view.findViewById<EditText>(R.id.enterPasswordEditText)
 
+        Log.e("Login", applicationViewModels.dbUser.UserName)
 
-        if (applicationViewModels.dbUser.UserName.isBlank()){
-            lifecycleScope.launch(Dispatchers.IO) {
-                var users = applicationViewModels.allUsersList()
-                applicationViewModels.dbUsers = users.size
-                for (user in users){
+        lifecycleScope.launch() {
+            var userList = emptyList<User>()
+            withContext(Dispatchers.IO) {
+                userList = applicationViewModels.allUsersList()
+                applicationViewModels.dbUsers = userList.size
+            }
+            if (userList.isNotEmpty()){
+                for (user in userList){
                     applicationViewModels.dbUser = user
+                    if (endLoginStatus){
+                        Log.e("Login1", "true")
+                    }
+                    if (User.isTokenStilValide(user.apiKeyDate)){
+                        Log.e("Login2", "true")
+                    }
                     if(User.isTokenStilValide(user.apiKeyDate) && endLoginStatus){
                         endLogin()
                     }else{
                         userNameInput.setText(user.Email)
                     }
-
                 }
             }
-        }else{
-            if(User.isTokenStilValide(applicationViewModels.dbUser.apiKeyDate)){
-
-            }
-            userNameInput.setText(applicationViewModels.dbUser.Email)
         }
 
 
