@@ -127,7 +127,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
             else{
                 withContext(Dispatchers.IO) {
-                    applicationViewModels.update(user)
+                    var dbusers = applicationViewModels.allUsersList()
+                    for (dbuser in dbusers){
+                        dbuser.apiKey = user.apiKey
+                        dbuser.apiKeyDate = user.apiKeyDate
+                        applicationViewModels.update(dbuser)
+                    }
+
                 }
             }
             withContext(Dispatchers.Main) {

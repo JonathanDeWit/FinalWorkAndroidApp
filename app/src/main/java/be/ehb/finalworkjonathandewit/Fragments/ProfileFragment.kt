@@ -109,6 +109,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             appUser.apiKey, appUser.apiKeyDate)
                     }
 
+
                     Log.e("Error code", error.errorCode.toString())
                     if (deleteStatus){
                         activity?.let {

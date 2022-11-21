@@ -89,15 +89,15 @@ class ApiUserRequest {
             val requestUrl = "$apiUrl/api/user/regist"
 
             val loginJson = Gson().toJson(user)
-            Log.e(LOGIN_REQUEST_TAG, loginJson)
+            Log.e(REGIST_USER_TAG, loginJson)
 
             val loginRequest = JsonObjectRequest(
                 Request.Method.POST, requestUrl, JSONObject(loginJson),
                 { response ->
-                    Log.e(LOGIN_REQUEST_TAG, response.toString())
+                    Log.e(REGIST_USER_TAG, response.toString())
                     createStatus.resume(true)
                 }, { error ->
-                    Log.e(LOGIN_REQUEST_TAG, error.message.toString())
+                    Log.e(REGIST_USER_TAG, error.message.toString())
                     if(error.networkResponse != null){
                         errorRequest.errorCode = error.networkResponse.statusCode
                         createStatus.resume(false)
@@ -117,8 +117,7 @@ class ApiUserRequest {
                 val requestUrl = "$apiUrl/api/user/delete"
 
                 val loginJson = Gson().toJson(loginUser)
-                val jUser = JSONObject()
-                Log.e("Update", loginJson)
+                Log.e("Delete", loginJson)
 
                 val userDeleteRequest = object:JsonObjectRequest(
                     Request.Method.POST, requestUrl, JSONObject(loginJson),
