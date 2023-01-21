@@ -8,7 +8,11 @@
         android:id="@+id/homeFragment"
         android:name="be.ehb.finalworkjonathandewit.Fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_liveVideoFragment2"
+            app:destination="@id/liveVideoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="be.ehb.finalworkjonathandewit.Fragments.LoginFragment"
@@ -47,4 +51,8 @@
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/liveVideoFragment"
+        android:name="be.ehb.finalworkjonathandewit.Fragments.LiveVideoFragment"
+        android:label="LiveVideoFragment" />
 </navigation>
