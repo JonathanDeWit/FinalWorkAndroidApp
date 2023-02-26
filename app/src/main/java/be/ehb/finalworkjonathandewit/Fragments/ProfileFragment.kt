@@ -60,8 +60,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
             })
         }
-        //applicationViewModels.allUsers.removeObservers(activity)
-        Log.e("User", appUser.Id)
 
         deleteButton.setOnClickListener {
             if (appUser.UserName.isNotBlank()){

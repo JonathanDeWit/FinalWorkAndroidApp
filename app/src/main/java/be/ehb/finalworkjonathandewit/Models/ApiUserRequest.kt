@@ -3,7 +3,9 @@ package be.ehb.finalworkjonathandewit.Models
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.util.Date
@@ -17,6 +19,8 @@ class ApiUserRequest {
         private val GET_USER_DATA_REQUEST_TAG = "GetUserDataRequest"
         private val DELETE_USER_TAG = "DeleteUserRequest"
         private val REGIST_USER_TAG = "RegistUserRequest"
+        private val SysStatus_TAG = "SysStatusRequest"
+        private val UpdateSysStatus_TAG = "UpdateSysStatusRequest"
 
         suspend fun login(loginUser: LoginUser, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<String> { jwtToken ->
 
@@ -51,8 +55,7 @@ class ApiUserRequest {
         suspend fun getUserInformation(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<User> { apiUser ->
             if (User.isTokenStilValide(apiKeyDate)){
                 val requestUrl = "$apiUrl/api/user/getInfo"
-
-                val getUserDataRequest = object:JsonObjectRequest(
+                    val getUserDataRequest = object:JsonObjectRequest(
                     Request.Method.GET, requestUrl, null,
                     { response ->
                         Log.e(GET_USER_DATA_REQUEST_TAG, response.toString())
@@ -85,6 +88,80 @@ class ApiUserRequest {
                 //ask new token
             }
         }
+
+        suspend fun updateSystemStatus(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError, newStatus: Boolean) = suspendCoroutine<Boolean> { apiUser ->
+            if (User.isTokenStilValide(apiKeyDate)){
+                val requestUrl = "$apiUrl/api/user/update/SystemState?newStatus=${newStatus.toString()}"
+                Log.e(UpdateSysStatus_TAG, requestUrl)
+                val updateSysStatusRequest = object : StringRequest(
+                    Request.Method.POST, requestUrl,
+                    Response.Listener<String> { response ->
+                        Log.i(UpdateSysStatus_TAG, response.toString())
+                        apiUser.resume(true)
+                    },
+                    Response.ErrorListener { error ->
+                        Log.e(UpdateSysStatus_TAG, error.message.toString())
+                        if(error.networkResponse != null){
+                            errorRequest.errorCode = error.networkResponse.statusCode
+                            apiUser.resume(false)
+                        }else{
+                            errorRequest.errorCode = 1
+                            apiUser.resume(false)
+                        }
+                    }) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer $apiKey"
+                        return headers
+                    }
+                }
+
+                updateSysStatusRequest.tag = UpdateSysStatus_TAG
+                queue.add(updateSysStatusRequest)
+            }else{
+                //ask new token
+            }
+        }
+
+        suspend fun getSysStatus(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<SysStatus> { sysStatus ->
+            if (User.isTokenStilValide(apiKeyDate)){
+                val requestUrl = "$apiUrl/api/user/getSystemState"
+
+                val getUserDataRequest = object:JsonObjectRequest(
+                    Request.Method.GET, requestUrl, null,
+                    { response ->
+                        Log.i(SysStatus_TAG, response.toString())
+                        val status = Gson().fromJson(response.toString(), SysStatus::class.java)
+                        Log.i(SysStatus_TAG, status.SysState.toString())
+
+                        sysStatus.resume(status)
+                    }, { error ->
+                        Log.e(SysStatus_TAG, error.message.toString())
+                        if(error.networkResponse != null){
+                            errorRequest.errorCode = error.networkResponse.statusCode
+                            sysStatus.resume(SysStatus())
+                        }else{
+                            errorRequest.errorCode = 1
+                            sysStatus.resume(SysStatus())
+                        }
+                    })
+                {
+                    //Adding Jwt token to header
+                    //Inspired by Angel Tellez 2019 stackoverflow post (https://stackoverflow.com/questions/51819176/how-to-add-a-custom-header-in-a-volley-request-with-kotlin)
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer $apiKey"
+                        return headers
+                    }
+                }
+
+                getUserDataRequest.tag = SysStatus_TAG
+                queue.add(getUserDataRequest)
+            }else{
+                //ask new token
+            }
+        }
+
         suspend fun registUser(queue: RequestQueue, errorRequest:RequestError, user: RegistUser) = suspendCoroutine<Boolean> { createStatus ->
             val requestUrl = "$apiUrl/api/user/regist"
 
