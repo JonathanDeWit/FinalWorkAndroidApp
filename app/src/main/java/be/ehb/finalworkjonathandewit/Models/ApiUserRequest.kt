@@ -27,12 +27,12 @@ class ApiUserRequest {
             val requestUrl = "$apiUrl/api/user/login"
 
             val loginJson = Gson().toJson(loginUser)
-            Log.e(LOGIN_REQUEST_TAG, loginJson)
+            Log.i(LOGIN_REQUEST_TAG, loginJson)
 
             val loginRequest = JsonObjectRequest(
                 Request.Method.POST, requestUrl, JSONObject(loginJson),
                 { response ->
-                    Log.e(LOGIN_REQUEST_TAG, response.toString())
+                    Log.i(LOGIN_REQUEST_TAG, response.toString())
                     val token = Gson().fromJson(response.toString(), JwtToken::class.java)
                     jwtToken.resume(token.jwtToken)
                 }, { error ->
@@ -58,7 +58,7 @@ class ApiUserRequest {
                     val getUserDataRequest = object:JsonObjectRequest(
                     Request.Method.GET, requestUrl, null,
                     { response ->
-                        Log.e(GET_USER_DATA_REQUEST_TAG, response.toString())
+                        Log.i(GET_USER_DATA_REQUEST_TAG, response.toString())
                         val user = Gson().fromJson(response.toString(), User::class.java)
                         user.apiKey = apiKey
                         apiUser.resume(user)
@@ -92,7 +92,7 @@ class ApiUserRequest {
         suspend fun updateSystemStatus(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError, newStatus: Boolean) = suspendCoroutine<Boolean> { apiUser ->
             if (User.isTokenStilValide(apiKeyDate)){
                 val requestUrl = "$apiUrl/api/user/update/SystemState?newStatus=${newStatus.toString()}"
-                Log.e(UpdateSysStatus_TAG, requestUrl)
+                Log.i(UpdateSysStatus_TAG, requestUrl)
                 val updateSysStatusRequest = object : StringRequest(
                     Request.Method.POST, requestUrl,
                     Response.Listener<String> { response ->
@@ -134,6 +134,7 @@ class ApiUserRequest {
                         val status = Gson().fromJson(response.toString(), SysStatus::class.java)
                         Log.i(SysStatus_TAG, status.SysState.toString())
 
+
                         sysStatus.resume(status)
                     }, { error ->
                         Log.e(SysStatus_TAG, error.message.toString())
@@ -161,6 +162,8 @@ class ApiUserRequest {
                 //ask new token
             }
         }
+
+
 
         suspend fun registUser(queue: RequestQueue, errorRequest:RequestError, user: RegistUser) = suspendCoroutine<Boolean> { createStatus ->
             val requestUrl = "$apiUrl/api/user/regist"

@@ -39,6 +39,10 @@
     <string name="unable_to_get_system_state">Unable to get system state</string>
     <string name="unable_to_change_system_state">Unable to change system state</string>
     <string name="loading">Loading...</string>
+    <string name="device_type">Device type:</string>
+    <string name="wach_live">Wach live</string>
+    <string name="edit_hub">Edit hub</string>
+    <string name="edit_camera">Edit Camera</string>
 
 
 </resources>

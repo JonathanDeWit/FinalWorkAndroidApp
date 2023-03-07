@@ -17,6 +17,8 @@ class LiveVideoFragment : Fragment(R.layout.fragment_livevideo){
 
 
     private lateinit var player: ExoPlayer
+    private var srtServerIp: String? = null
+    private var outgoingStreamPort: Int? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -27,8 +29,15 @@ class LiveVideoFragment : Fragment(R.layout.fragment_livevideo){
         var playerView = view.findViewById<StyledPlayerView>(R.id.exoPlayerView)
 
 
-        val url = "192.168.1.32"
-        val port = 50005
+
+
+        arguments?.let {
+            srtServerIp = it.getString("ip")
+            outgoingStreamPort = it.getInt("port")
+        }
+
+        val url = srtServerIp.toString()
+        val port = outgoingStreamPort!!
 
         val source = ProgressiveMediaSource.Factory(SrtLiveStreamDataSourceFactory(url,port,),
         ).createMediaSource(MediaItem.fromUri(Uri.EMPTY))
