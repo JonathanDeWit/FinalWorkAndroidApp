@@ -6,29 +6,44 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import be.ehb.finalworkjonathandewit.Models.SysStatus
 import be.ehb.finalworkjonathandewit.R
 
-class HubRecyclerAdapter (var hubs: List<SysStatus.Hub>): RecyclerView.Adapter<HubRecyclerAdapter.HubViewHolder>() {
+class HubRecyclerAdapter(
+    var hubs: List<SysStatus.Hub>,
+    var cameras: List<SysStatus.Camera>,
+    val navController: NavController,
+    var context: Context?,
+    val activity: FragmentActivity?
+): RecyclerView.Adapter<HubRecyclerAdapter.HubViewHolder>() {
     inner class HubViewHolder(hubItemView: View) : RecyclerView.ViewHolder(hubItemView) {
         var hubNameTextView: TextView
         var hubTypeTextView: TextView
+        var receivedCameraTextView: TextView
+        var notReceivedCameraTextView: TextView
         var editHubButton: ImageButton
+        var receiveCamerasRecyclerView: RecyclerView
+        var notReceiveCamerasRecyclerView: RecyclerView
 
         init {
             hubNameTextView = hubItemView.findViewById(R.id.hubNameTextView)
             hubTypeTextView = hubItemView.findViewById(R.id.hubTypeTextView)
+            receivedCameraTextView = hubItemView.findViewById(R.id.receivedCameraTextView)
+            notReceivedCameraTextView = hubItemView.findViewById(R.id.notReceivedCameraTextView)
             editHubButton = hubItemView.findViewById(R.id.editHubButton)
+            receiveCamerasRecyclerView = hubItemView.findViewById<RecyclerView>(R.id.receiveCamerasRecyclerView)
+            receiveCamerasRecyclerView.layoutManager = LinearLayoutManager(activity)
+            notReceiveCamerasRecyclerView = hubItemView.findViewById<RecyclerView>(R.id.notReceiveCamerasRecyclerView)
+            notReceiveCamerasRecyclerView.layoutManager = LinearLayoutManager(activity)
         }
     }
 
-    var context: Context? = null
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        context = recyclerView.context
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HubViewHolder {
@@ -44,9 +59,39 @@ class HubRecyclerAdapter (var hubs: List<SysStatus.Hub>): RecyclerView.Adapter<H
         holder.editHubButton.setOnClickListener {
             //Open Edit view
         }
-//            val intent = Intent(context, MonumentActivity::class.java)
-//            intent.putExtra(MainActivity.EXTRA_MONUMENT_API_ID, monument.apiId)
-//            context?.startActivity(intent)
+
+        var receiveCameras = mutableListOf<String>()
+        var notReceiveCameras = mutableListOf<String>()
+
+        for (camera in cameras){
+            if (camera.HubReceiveVideoStream){
+                camera.DeviceName?.let { receiveCameras.add(it) }
+            }
+            else{
+                camera.DeviceName?.let { notReceiveCameras.add(it) }
+            }
+        }
+
+        if (receiveCameras.size > 0){
+            val receiveCameraAdapter = CameraStatusRecyclerAdapter(receiveCameras, true, context)
+            holder.receiveCamerasRecyclerView.adapter = receiveCameraAdapter
+        }
+        else{
+            holder.receivedCameraTextView.text = ""
+        }
+        if(notReceiveCameras.size > 0){
+            val notReceiveCameraAdapter = CameraStatusRecyclerAdapter(notReceiveCameras, false, context)
+            holder.notReceiveCamerasRecyclerView.adapter = notReceiveCameraAdapter
+        }
+        else{
+            holder.notReceivedCameraTextView.text = ""
+        }
+
+
+
+
+
+
     }
 
     override fun getItemCount(): Int {

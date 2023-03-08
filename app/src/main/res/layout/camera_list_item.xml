@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/cameraNameTextView"
+            android:id="@+id/CameraNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foregroundGravity="center"
@@ -38,7 +38,29 @@
             android:text="@string/device_type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cameraNameTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/CameraNameTextView" />
+
+        <TextView
+            android:id="@+id/cameraLocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="@string/device_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cameraTypeTextView" />
+
+        <TextView
+            android:id="@+id/cameraTranStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="@string/camera_is_not_transmitting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cameraLocationTextView" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -67,9 +89,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/wach_live"
+        android:hapticFeedbackEnabled="false"
+        android:text="@string/watch_live"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
