@@ -7,6 +7,17 @@
     tools:context=".Fragments.AddDeviceFragment">
 
     <TextView
+        android:id="@+id/errorAddDeviceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="#F44336"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Error:" />
+
+    <TextView
         android:id="@+id/deviceUserNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="@string/device_location_edit"
+        android:text="@string/password"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deviceUserNameEditText" />
@@ -60,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/save_changes"
+        android:text="@string/add_device"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/devicePasswordEditText" />

@@ -57,8 +57,9 @@
     <string name="save_changes">Save changes</string>
     <string name="update_succeed">Update succeed</string>
     <string name="update_failed">Update failed</string>
-
-
+    <string name="adding_device_succeed">Adding device succeed</string>
+    <string name="adding_device_failed">Adding device failed</string>
+    <string name="add_device">Add device</string>
 
 
 </resources>

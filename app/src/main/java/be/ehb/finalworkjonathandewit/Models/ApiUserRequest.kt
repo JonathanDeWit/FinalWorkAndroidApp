@@ -23,7 +23,6 @@ class ApiUserRequest {
         private val UpdateSysStatus_TAG = "UpdateSysStatusRequest"
 
         suspend fun login(loginUser: LoginUser, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<String> { jwtToken ->
-
             val requestUrl = "$apiUrl/api/user/login"
 
             val loginJson = Gson().toJson(loginUser)
@@ -185,6 +184,44 @@ class ApiUserRequest {
             }
         }
 
+        suspend fun addDevice(loginUser: LoginUser, apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<Boolean> { apiUser ->
+            if (User.isTokenStilValide(apiKeyDate)){
+
+                val loginJson = Gson().toJson(loginUser)
+
+                val requestUrl = "$apiUrl/api/user/add/device"
+                val getUserDataRequest = object:JsonObjectRequest(
+                    Request.Method.POST, requestUrl, JSONObject(loginJson),
+                    { response ->
+                        Log.i(GET_USER_DATA_REQUEST_TAG, response.toString())
+                        apiUser.resume(true)
+                    }, { error ->
+                        Log.e(GET_USER_DATA_REQUEST_TAG, error.message.toString())
+                        if(error.networkResponse != null){
+                            errorRequest.errorCode = error.networkResponse.statusCode
+                            apiUser.resume(false)
+                        }else{
+                            errorRequest.errorCode = 1
+                            apiUser.resume(false)
+                        }
+                    })
+                {
+                    //Adding Jwt token to header
+                    //Inspired by Angel Tellez 2019 stackoverflow post (https://stackoverflow.com/questions/51819176/how-to-add-a-custom-header-in-a-volley-request-with-kotlin)
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer $apiKey"
+                        return headers
+                    }
+                }
+
+                getUserDataRequest.tag = LOGIN_REQUEST_TAG
+                queue.add(getUserDataRequest)
+            }else{
+                //ask new token
+            }
+        }
+
         suspend fun getSysStatus(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError) = suspendCoroutine<SysStatus> { sysStatus ->
             if (User.isTokenStilValide(apiKeyDate)){
                 val requestUrl = "$apiUrl/api/user/getSystemState"
@@ -287,7 +324,6 @@ class ApiUserRequest {
                         return headers
                     }
                 }
-
                 userDeleteRequest.tag = LOGIN_REQUEST_TAG
                 queue.add(userDeleteRequest)
             }
