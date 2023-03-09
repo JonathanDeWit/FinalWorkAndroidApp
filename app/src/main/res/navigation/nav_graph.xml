@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_homeFragment_to_liveVideoFragment2"
             app:destination="@id/liveVideoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_editDeviceFragment"
+            app:destination="@id/editDeviceFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -63,5 +66,27 @@
             android:name="port"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDeviceFragment"
+        android:name="be.ehb.finalworkjonathandewit.Fragments.EditDeviceFragment"
+        android:label="fragment_edit_device"
+        tools:layout="@layout/fragment_edit_device" >
+        <argument
+            android:name="deviceId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="deviceType"
+            app:argType="be.ehb.finalworkjonathandewit.Models.DeviceType"
+            android:defaultValue="None" />
+        <argument
+            android:name="deviceLocation"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="deviceName"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

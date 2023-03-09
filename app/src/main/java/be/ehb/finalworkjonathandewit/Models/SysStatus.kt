@@ -9,14 +9,14 @@ class SysStatus (
         class Hub (
                 var DeviceName: String? = null,
                 var DeviceLocation: String? = null,
-                var Id: Int? = null
+                var Id: Int = 0
         )
 
         class Camera (
                 var LocalIp: String? = null,
                 var DeviceName: String? = null,
                 var DeviceLocation: String? = null,
-                var Id: Int? = null,
+                var Id: Int = 0,
                 var TransmitVideoStream: Boolean = false,
                 var HubReceiveVideoStream: Boolean = false,
                 var VideoStream: VideoStreamOb? = null

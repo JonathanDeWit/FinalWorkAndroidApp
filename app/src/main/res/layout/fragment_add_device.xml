@@ -4,21 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Fragments.EditDeviceFragment">
+    tools:context=".Fragments.AddDeviceFragment">
 
     <TextView
-        android:id="@+id/errorUpdateDeviceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="#F44336"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Error:" />
-
-    <TextView
-        android:id="@+id/deviceNameTextView"
+        android:id="@+id/deviceUserNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
@@ -29,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/deviceNameEditText"
+        android:id="@+id/deviceUserNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -38,10 +27,11 @@
         android:hint="@string/enter_a_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceNameTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/deviceUserNameTextView"
+        android:autofillHints="" />
 
     <TextView
-        android:id="@+id/deviceLocationTextView"
+        android:id="@+id/devicePasswordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -49,28 +39,31 @@
         android:text="@string/device_location_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/deviceUserNameEditText" />
 
     <EditText
-        android:id="@+id/deviceLocationEditText"
+        android:id="@+id/devicePasswordEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
-        android:inputType="textPersonName"
         android:hint="@string/enter_device_location"
         android:textSize="20sp"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceLocationTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/devicePasswordTextView"
+        android:autofillHints="" />
 
     <Button
-        android:id="@+id/editDeviceButton"
+        android:id="@+id/addDeviceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/save_changes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deviceLocationEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/devicePasswordEditText" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

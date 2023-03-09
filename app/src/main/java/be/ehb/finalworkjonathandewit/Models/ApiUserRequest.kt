@@ -115,11 +115,73 @@ class ApiUserRequest {
                         return headers
                     }
                 }
-
                 updateSysStatusRequest.tag = UpdateSysStatus_TAG
                 queue.add(updateSysStatusRequest)
             }else{
-                //ask new token
+            }
+        }
+
+        suspend fun updateDeviceName(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError, cameraId:Int, name: String, deviceType: DeviceType) = suspendCoroutine<Boolean> { apiUser ->
+            if (User.isTokenStilValide(apiKeyDate)){
+                val requestUrl = "$apiUrl/api/user/update/${deviceType}/name?deviceId=${cameraId}&name=${name}"
+                Log.i(UpdateSysStatus_TAG, requestUrl)
+                val updateSysStatusRequest = object : StringRequest(
+                    Request.Method.POST, requestUrl,
+                    Response.Listener<String> { response ->
+                        Log.i(UpdateSysStatus_TAG, response.toString())
+                        apiUser.resume(true)
+                    },
+                    Response.ErrorListener { error ->
+                        Log.e(UpdateSysStatus_TAG, error.message.toString())
+                        if(error.networkResponse != null){
+                            errorRequest.errorCode = error.networkResponse.statusCode
+                            apiUser.resume(false)
+                        }else{
+                            errorRequest.errorCode = 1
+                            apiUser.resume(false)
+                        }
+                    }) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer $apiKey"
+                        return headers
+                    }
+                }
+                updateSysStatusRequest.tag = UpdateSysStatus_TAG
+                queue.add(updateSysStatusRequest)
+            }else{
+            }
+        }
+
+        suspend fun updateDeviceLocation(apiKey:String, apiKeyDate:Date, queue: RequestQueue, errorRequest:RequestError, cameraId:Int, name: String, deviceType: DeviceType) = suspendCoroutine<Boolean> { apiUser ->
+            if (User.isTokenStilValide(apiKeyDate)){
+                val requestUrl = "$apiUrl/api/user/update/${deviceType}/location?deviceId=${cameraId}&location=${name}"
+                Log.i(UpdateSysStatus_TAG, requestUrl)
+                val updateSysStatusRequest = object : StringRequest(
+                    Request.Method.POST, requestUrl,
+                    Response.Listener<String> { response ->
+                        Log.i(UpdateSysStatus_TAG, response.toString())
+                        apiUser.resume(true)
+                    },
+                    Response.ErrorListener { error ->
+                        Log.e(UpdateSysStatus_TAG, error.message.toString())
+                        if(error.networkResponse != null){
+                            errorRequest.errorCode = error.networkResponse.statusCode
+                            apiUser.resume(false)
+                        }else{
+                            errorRequest.errorCode = 1
+                            apiUser.resume(false)
+                        }
+                    }) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer $apiKey"
+                        return headers
+                    }
+                }
+                updateSysStatusRequest.tag = UpdateSysStatus_TAG
+                queue.add(updateSysStatusRequest)
+            }else{
             }
         }
 

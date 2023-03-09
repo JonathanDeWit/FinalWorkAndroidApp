@@ -2,6 +2,7 @@ package be.ehb.finalworkjonathandewit.RecyclerView
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import be.ehb.finalworkjonathandewit.Fragments.HomeFragmentDirections
+import be.ehb.finalworkjonathandewit.Models.DeviceType
 import be.ehb.finalworkjonathandewit.Models.SysStatus
 import be.ehb.finalworkjonathandewit.R
 
@@ -54,8 +56,11 @@ class CameraRecyclerAdapter(
         val camera = camera.get(position)
         holder.deviceNameTextView.text = camera.DeviceName
         holder.deviceTypeTextView.text = holder.deviceTypeTextView.text.toString().plus(" Camera")
+
         holder.editHubButton.setOnClickListener {
             //Open Edit view
+            val action = HomeFragmentDirections.actionHomeFragmentToEditDeviceFragment(camera.DeviceLocation, camera.DeviceName, camera.Id, DeviceType.camera)
+            navController.navigate(action)
         }
 
         //Check if the live video is send by the camera and converted by the hub

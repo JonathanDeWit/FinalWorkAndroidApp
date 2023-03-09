@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import be.ehb.finalworkjonathandewit.Fragments.HomeFragmentDirections
+import be.ehb.finalworkjonathandewit.Models.DeviceType
 import be.ehb.finalworkjonathandewit.Models.SysStatus
 import be.ehb.finalworkjonathandewit.R
 
@@ -25,16 +27,19 @@ class HubRecyclerAdapter(
         var hubTypeTextView: TextView
         var receivedCameraTextView: TextView
         var notReceivedCameraTextView: TextView
+        var hubLocationTextView: TextView
         var editHubButton: ImageButton
         var receiveCamerasRecyclerView: RecyclerView
         var notReceiveCamerasRecyclerView: RecyclerView
+
 
         init {
             hubNameTextView = hubItemView.findViewById(R.id.hubNameTextView)
             hubTypeTextView = hubItemView.findViewById(R.id.hubTypeTextView)
             receivedCameraTextView = hubItemView.findViewById(R.id.receivedCameraTextView)
             notReceivedCameraTextView = hubItemView.findViewById(R.id.notReceivedCameraTextView)
-            editHubButton = hubItemView.findViewById(R.id.editHubButton)
+            hubLocationTextView = hubItemView.findViewById(R.id.hubLocationTextView)
+            editHubButton = hubItemView.findViewById<ImageButton>(R.id.editHubButton)
             receiveCamerasRecyclerView = hubItemView.findViewById<RecyclerView>(R.id.receiveCamerasRecyclerView)
             receiveCamerasRecyclerView.layoutManager = LinearLayoutManager(activity)
             notReceiveCamerasRecyclerView = hubItemView.findViewById<RecyclerView>(R.id.notReceiveCamerasRecyclerView)
@@ -56,8 +61,14 @@ class HubRecyclerAdapter(
         val hub = hubs.get(position)
         holder.hubNameTextView.text = hub.DeviceName
         holder.hubTypeTextView.text = holder.hubTypeTextView.text.toString().plus(" Hub")
+
+        if (hub.DeviceLocation != null){
+            holder.hubLocationTextView.text = hub.DeviceLocation
+        }
+
         holder.editHubButton.setOnClickListener {
-            //Open Edit view
+            val action = HomeFragmentDirections.actionHomeFragmentToEditDeviceFragment(hub.DeviceLocation, hub.DeviceName,hub.Id, DeviceType.hub)
+            navController.navigate(action)
         }
 
         var receiveCameras = mutableListOf<String>()
