@@ -4,6 +4,8 @@ This project is part of my Final Work project for my bachelor’s degree in appl
 My project mainly consisted of building a video surveillance system by using microcontrollers.
 If you want to know more about the project, I invite you to consult the following links:
 
+[Final Work Paper](https://github.com/JonathanDeWit/FinalWorkAndroidApp/blob/master/FinalWorkPaper.pdf) (NL)
+
 Other related repositories:
 * [ESP32-CAM microcontroller surveillance camera](https://github.com/JonathanDeWit/FinalWorkESP32CamLiveCamera)
 * [ASP.NET API](https://github.com/JonathanDeWit/FinalWorkApi)
